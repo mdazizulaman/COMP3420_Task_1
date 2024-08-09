@@ -46,20 +46,17 @@ def histogram(image, buckets, channel):
     channel_data = image[:, :, channel_index]
     #Flattens the 2D array of the channel data into a 1D list of pixel values
     pixels = [item for sub_channel in channel_data for item in sub_channel]
+    #print('pixels:', pixels)
     #calculating bucket size
-    bucket_size = 256 / buckets
+    bucket_size = 256 // buckets
     #print(bucket_size)
     # Initializing the histogram array
-    hist = []
-    for i in range(0,buckets):
-        # Define lower and upper bounds
-        lower_bound = i*bucket_size
-        #print('lower =',lower_bound)
-        upper_bound = (i+1)*bucket_size
-        #print('upper =',upper_bound)
-        # Count values within the bounds
-        count = len([x for x in pixels if lower_bound <= x <= upper_bound])
-        hist.append(count)
+    hist = [0] * buckets
+    for x in pixels:
+        # Determine which bucket the pixel value falls into
+        bucket_index = min(x // bucket_size, buckets - 1) # Ensure index is within range
+        #print(bucket_index)
+        hist[bucket_index] += 1
     
     return hist
      
@@ -83,8 +80,6 @@ def build_deep_nn(rows, columns, channels, layer_options):
         if dropout_rate > 0:
             model.add(Dropout(dropout_rate))
     return model
-       #num_hidden, hidden_sizes, dropout_rates,
-       #           output_size, output_activation):
 
 if __name__ == "__main__":
      import doctest
