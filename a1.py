@@ -90,8 +90,34 @@ def histogram(image, buckets, channel):
     >>> histogram(image, 6, 'blue')
     array([2, 0, 0, 1, 0, 3])
     """
+    #defining channel index value 
+    if channel=='red':
+        channel_index = 0
+    elif channel=='green':
+        channel_index = 1
+    elif channel=='blue':
+        channel_index = 2
     
-    return None
+    # Extracting the specific channel from the image
+    channel_data = image[:, :, channel_index]
+    #Flattens the 2D array of the channel data into a 1D list of pixel values
+    pixels = [item for sub_channel in channel_data for item in sub_channel]
+    #calculating bucket size
+    bucket_size = 256 / buckets
+    #print(bucket_size)
+    # Initializing the histogram array
+    hist = []
+    for i in range(0,buckets):
+        # Define lower and upper bounds
+        lower_bound = i*bucket_size
+        #print('lower =',lower_bound)
+        upper_bound = (i+1)*bucket_size
+        #print('upper =',upper_bound)
+        # Count values within the bounds
+        count = len([x for x in pixels if lower_bound <= x <= upper_bound])
+        hist.append(count)
+    
+    return hist
      
 # Task 3
 def build_deep_nn(rows, columns, channels, layer_options):
