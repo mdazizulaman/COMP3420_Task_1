@@ -121,9 +121,27 @@ def histogram(image, buckets, channel):
      
 # Task 3
 def build_deep_nn(rows, columns, channels, layer_options):
+    # Initializing the model
+    model = Sequential()
+    
+    # Adding the Flatten layer
+    model.add(Flatten(input_shape=(rows, columns, channels)))
+    
+    # Iterating over the layer options and add layers accordingly
+    for i in range(len(layer_options)):
+        hidden_size = layer_options[i][0]
+        activation = layer_options[i][1]
+        dropout_rate = layer_options[i][2]
+        # Adding a Dense layer with the given size and activation function
+        model.add(Dense(hidden_size, activation=activation))
+        
+        # Adding a Dropout layer if layer_options[i][2] > 0
+        if dropout_rate > 0:
+            model.add(Dropout(dropout_rate))
+    return model
        #num_hidden, hidden_sizes, dropout_rates,
        #           output_size, output_activation):
-     """Return a Keras neural model that has the following layers:
+    """Return a Keras neural model that has the following layers:
      - a Flatten layer with input shape (rows, columns, channels)
      - as many hidden layers as the length of layer_options
      - layer_options is a list of layer options, such that:
@@ -178,8 +196,7 @@ def build_deep_nn(rows, columns, channels, layer_options):
      'relu'
      >>> model.layers[4].get_config()['activation']
      'sigmoid'
-     """
-     return None
+    """
 
 if __name__ == "__main__":
      import doctest
